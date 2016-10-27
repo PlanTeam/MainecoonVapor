@@ -12,7 +12,7 @@ drop.post("todos") { req in
     let todo = try Todo(request: req)
     
     // Return the messae
-    return "Successfully created Todo: \(todo.getProperty("_id").string)"
+    return "Successfully created Todo: \(todo.getProperty(forKey: "_id").string)"
 }
 
 drop.get("todos") { _ in
