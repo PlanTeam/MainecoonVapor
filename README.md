@@ -119,4 +119,14 @@ drop.get("todos", Todo.self) { request, todo in
 }
 ```
 
-The above code will resolve "/todos/0123456789abcdef" to a Todo's ObjectId and it'll resolve the ObjectId to the related Todo.
+The above code will resolve "/todos/0123456789abcdef" to a Todo's ObjectId and it'll resolve the ObjectId to the related Todo. then it'll return the Todo object as MongoDB Extended JSON to the client.
+
+If you prefer to return only the title of the todo it's as simple as:
+
+```swift
+let drop = Droplet()
+
+drop.get("todos", Todo.self) { request, todo in
+    return todo.title
+}
+```
