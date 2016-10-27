@@ -25,21 +25,13 @@ drop.get("todos") { _ in
     return jsons.joined(separator: ",")
 }
 
-drop.get("todos", ObjectId.self) { _, todoIdentifier in
-    guard let todo = try Todo.findOne(matching: "_id" == todoIdentifier) else {
-        return "TODO not found"
-    }
-    
+drop.get("todos", Todo.self) { _, todo in
     return todo
 }
 
-drop.delete("todos", ObjectId.self) { req, todoIdentifier in
-    guard let todo = try Todo.findOne(matching: "_id" == todoIdentifier) else {
-        return "TODO not found"
-    }
-    
+drop.delete("todos", Todo.self) { req, todo in
     try todo.remove()
-    return "Todo removed"
+    return "Todo \(todo.identifier) removed"
 }
 
 let server = try! Server(hostname: "localhost")

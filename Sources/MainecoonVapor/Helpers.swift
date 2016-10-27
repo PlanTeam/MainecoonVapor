@@ -28,7 +28,15 @@ extension HTTP.Response {
     }
 }
 
-open class VaporInstance: BasicInstance, ResponseRepresentable, RequestInitializable {
+open class VaporInstance: BasicInstance, ResponseRepresentable, RequestInitializable, StringInitializable {
+    public required init?(from string: String) throws {
+        try super.init(fromIdentifier: try ObjectId(string).makeBsonValue())
+    }
+    
+    public required init(fromIdentifier id: Value) throws {
+        try super.init(fromIdentifier: id)
+    }
+    
     /// Defaults to all
     public var defaultApiFields: [String]? = nil
     
