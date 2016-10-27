@@ -1,6 +1,6 @@
 @_exported import Mainecoon
+@_exported import Vapor
 import BSON
-import Vapor
 import HTTP
 
 extension ObjectId: StringInitializable {
