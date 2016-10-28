@@ -6,6 +6,14 @@ Mainecoon is an ORM aimed at having a really small amount of bloat in setting th
 
 Mainecoon is based on MongoDB and [MongoKitten](https://github.com/OpenKitten/MongoKitten).
 
+## Importing
+
+To your project's Package.swift:
+`.Package(url: "https://github.com/OpenKitten/MainecoonVapor.git", majorVersion: 0, minor: 1)`
+
+To your project's code:
+`import MainecoonVapor`
+
 ## Usage
 
 Mainecoon revolves around four main objects.
