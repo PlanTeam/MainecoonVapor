@@ -9,7 +9,7 @@ extension ObjectId: StringInitializable {
     }
 }
 
-extension BSONDocument : ResponseRepresentable, RequestInitializable {
+extension Document : ResponseRepresentable, RequestInitializable {
     public func makeResponse() throws -> Response {
         return Response(status: .ok, headers: ["Content-Type": "application/json"], body: self.makeExtendedJSON())
     }
@@ -40,7 +40,7 @@ open class VaporInstance: BasicInstance, ResponseRepresentable, RequestInitializ
     /// Defaults to all
     public var defaultApiFields: [String]? = nil
     
-    public var apiResponse: BSONDocument {
+    public var apiResponse: Document {
         guard let defaultApiFields = defaultApiFields else {
             return self.document
         }
@@ -51,26 +51,26 @@ open class VaporInstance: BasicInstance, ResponseRepresentable, RequestInitializ
             response[field] = self.getProperty(forKey: field) as Value
         }
         
-        return BSONDocument(response)
+        return response
     }
     
     public init(extendedJson: String) throws {
-        let document = try BSONDocument(extendedJSON: extendedJson)
+        let document = try Document(extendedJSON: extendedJson)
         
         try super.init(document)
     }
     
     public required init(request: Request) throws {
-        let document = try BSONDocument(request: request)
+        let document = try Document(request: request)
         
         try super.init(document)
     }
     
-    public required init(_ document: BSONDocument, validatingDocument validate: Bool) throws {
+    public required init(_ document: Document, validatingDocument validate: Bool) throws {
         try super.init(document, validatingDocument: validate)
     }
     
-    public required init(_ document: BSONDocument, projectedBy projection: Projection, validatingDocument validate: Bool) throws {
+    public required init(_ document: Document, projectedBy projection: Projection, validatingDocument validate: Bool) throws {
         try super.init(document, projectedBy: projection, validatingDocument: validate)
     }
     
@@ -82,9 +82,9 @@ open class VaporInstance: BasicInstance, ResponseRepresentable, RequestInitializ
         var response: Document = [:]
         
         for field in fields {
-            response[field] = self.getProperty(forKey: field)
+            response[field] = self.getProperty(forKey: field) as Value
         }
         
-        return try BSONDocument(response).makeResponse()
+        return try response.makeResponse()
     }
 }
