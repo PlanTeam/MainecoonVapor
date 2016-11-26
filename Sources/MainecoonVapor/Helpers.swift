@@ -30,10 +30,10 @@ extension HTTP.Response {
 
 open class VaporInstance: BasicInstance, ResponseRepresentable, RequestInitializable, StringInitializable {
     public required init?(from string: String) throws {
-        try super.init(fromIdentifier: try ObjectId(string).makeBsonValue())
+        try super.init(fromIdentifier: try ObjectId(string))
     }
     
-    public required init(fromIdentifier id: Value) throws {
+    public required init(fromIdentifier id: ValueConvertible) throws {
         try super.init(fromIdentifier: id)
     }
     
@@ -48,13 +48,13 @@ open class VaporInstance: BasicInstance, ResponseRepresentable, RequestInitializ
         var response: Document = [:]
         
         for field in defaultApiFields {
-            response[field] = self.getProperty(forKey: field) as Value
+            response[raw: field] = self.getRawProperty(forKey: field)
         }
         
         return response
     }
     
-    public init(extendedJson: String) throws {
+    public init(extendedJson: String, isNew: Bool = true) throws {
         let document = try Document(extendedJSON: extendedJson)
         
         try super.init(document)
@@ -66,12 +66,16 @@ open class VaporInstance: BasicInstance, ResponseRepresentable, RequestInitializ
         try super.init(document)
     }
     
-    public required init(_ document: Document, validatingDocument validate: Bool) throws {
+    public required init(_ document: Document, validatingDocument validate: Bool, isNew: Bool = true) throws {
         try super.init(document, validatingDocument: validate)
     }
     
-    public required init(_ document: Document, projectedBy projection: Projection, validatingDocument validate: Bool) throws {
+    public required init(_ document: Document, projectedBy projection: Projection, validatingDocument validate: Bool, isNew: Bool = true) throws {
         try super.init(document, projectedBy: projection, validatingDocument: validate)
+    }
+    
+    public required init(fromIdentifier id: ValueConvertible, projectedBy projection: Projection) throws {
+        try super.init(fromIdentifier: id, projectedBy: projection)
     }
     
     public func makeResponse() throws -> Response {
@@ -82,7 +86,7 @@ open class VaporInstance: BasicInstance, ResponseRepresentable, RequestInitializ
         var response: Document = [:]
         
         for field in fields {
-            response[field] = self.getProperty(forKey: field) as Value
+            response[raw: field] = self.getRawProperty(forKey: field)
         }
         
         return try response.makeResponse()
